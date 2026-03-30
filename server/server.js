@@ -1,55 +1,34 @@
-// Importamos la librería Express
-// Express es un framework para crear servidores en Node.js
+// Importamos Express para crear el servidor
 import express from 'express'
+
+// Cargamos las variables de entorno desde .env
+import './config/dotenv.js'
+
+// Importamos CORS para permitir requests desde el frontend
+import cors from 'cors'
+
+// Importamos las rutas de gifts
 import giftsRouter from './routes/gifts.js'
 
-// Creamos una aplicación Express
-// "app" representa nuestro servidor
+
+// Creamos la app de Express
 const app = express()
 
+// Permitimos solicitudes desde otros puertos/dominios
+app.use(cors())
 
-// 🔹 Middleware 1
-// Le decimos a Express:
-// Cuando alguien visite /public en el navegador,
-// sirve archivos desde la carpeta ../client/public
-app.use('/public', express.static('../client/public'))
-
-
-// 🔹 Middleware 2
-// Cuando alguien visite /scripts,
-// sirve archivos desde ../client/public/scripts
-app.use('/scripts', express.static('../client/public/scripts'))
-
+// Registramos las rutas de gifts
 app.use('/gifts', giftsRouter)
 
-
-// 🔹 Ruta principal (endpoint raíz)
-// Cuando alguien entra a http://localhost:3001/
-// ejecuta esta función
+// Ruta principal
 app.get('/', (req, res) => {
-
-  // res.status(200) significa:
-  // "Todo salió bien"
-  // 200 = HTTP status code OK
-
-  // .send() envía una respuesta al navegador
-  res.status(200).send(
-    '<h1 style="text-align: center; margin-top: 50px;">UnEarthed API</h1>'
-  )
+  res.status(200).send('<h1 style="text-align: center; margin-top: 50px;">UnEarthed API</h1>')
 })
 
-
-// 🔹 Puerto del servidor
-// process.env.PORT es una variable de entorno
-// Si existe (en producción), la usa.
-// Si no existe, usa 3001.
+// Puerto del servidor
 const PORT = process.env.PORT || 3001
 
-
-// 🔹 Arranca el servidor
-// Hace que el servidor escuche en el puerto definido
+// Iniciamos el servidor
 app.listen(PORT, () => {
-
-  // Mensaje en consola cuando el server está listo
   console.log(`🚀 Server listening on http://localhost:${PORT}`)
 })
